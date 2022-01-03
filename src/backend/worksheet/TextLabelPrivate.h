@@ -46,7 +46,7 @@ public:
 	QImage teXImage;
 	QByteArray teXPdfData;
 	QFutureWatcher<QByteArray> teXImageFutureWatcher;
-	TeXRenderer::Result texRenderResult;
+	TeXRenderer::Result teXRenderResult;
 
 	// see TextLabel::init() for type specific default settings
 

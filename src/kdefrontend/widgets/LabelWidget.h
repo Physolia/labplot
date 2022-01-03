@@ -115,7 +115,7 @@ private Q_SLOTS:
 
 	//SLOTs for changes triggered in TextLabel
 	void labelTextWrapperChanged(const TextLabel::TextWrapper&);
-	void labelTeXImageUpdated(bool);
+	void labelTeXImageUpdated(const TeXRenderer::Result &result);
 	void labelTeXFontChanged(const QFont&);
 	void labelFontColorChanged(const QColor);
 	void labelBackgroundColorChanged(const QColor);

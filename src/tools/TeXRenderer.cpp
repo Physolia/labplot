@@ -35,7 +35,7 @@
 
 	\ingroup tools
 */
-QByteArray TeXRenderer::renderImageLaTeX(const QString& teXString, bool* success, const TeXRenderer::Formatting& format) {
+QByteArray TeXRenderer::renderImageLaTeX(const QString& teXString, Result* res, const TeXRenderer::Formatting& format) {
 	const QColor& fontColor = format.fontColor;
 	const QColor& backgroundColor = format.backgroundColor;
 	const int fontSize = format.fontSize;
@@ -59,8 +59,10 @@ QByteArray TeXRenderer::renderImageLaTeX(const QString& teXString, bool* success
 	if (!tempPath.contains(QLatin1String("preview.sty"))) {
 		QString file = QStandardPaths::locate(QStandardPaths::AppDataLocation, QLatin1String("latex/preview.sty"));
 		if (file.isEmpty()) {
-			WARN("Couldn't find preview.sty.");
-			*success = false;
+			QString err = "Couldn't find preview.sty.";
+			WARN(err.toStdString());
+			res->successful = false;
+			res->errorMessage = err;
 			return QByteArray();
 		}
 		else
@@ -74,8 +76,10 @@ QByteArray TeXRenderer::renderImageLaTeX(const QString& teXString, bool* success
 	if (file.open()) {
 		QDir::setCurrent(tempPath);
 	} else {
-		WARN("Couldn't open the file " << STDSTRING(file.fileName()));
-		*success = false;
+		QString err = "Couldn't open the file " + file.fileName();
+		WARN(err.toStdString());
+		res->successful = false;
+		res->errorMessage = err;
 		return QByteArray();
 	}
 
@@ -128,13 +132,13 @@ QByteArray TeXRenderer::renderImageLaTeX(const QString& teXString, bool* success
 	out.flush();
 
 	if (engine == "latex")
-		return imageFromDVI(file, dpi, success);
+		return imageFromDVI(file, dpi, res);
 	else
-		return imageFromPDF(file, dpi, engine, success);
+		return imageFromPDF(file, dpi, engine, res);
 }
 
 // TEX -> PDF -> QImage
-QByteArray TeXRenderer::imageFromPDF(const QTemporaryFile& file, const int dpi, const QString& engine, bool* success) {
+QByteArray TeXRenderer::imageFromPDF(const QTemporaryFile& file, const int dpi, const QString& engine, Result *res) {
 	Q_UNUSED(dpi)
 	//DEBUG(Q_FUNC_INFO << ", tmp file = " << STDSTRING(file.fileName()) << ", engine = " << STDSTRING(engine) << ", dpi = " << dpi)
 	QFileInfo fi(file.fileName());
@@ -150,8 +154,10 @@ QByteArray TeXRenderer::imageFromPDF(const QTemporaryFile& file, const int dpi, 
 #endif
 
 	if (!latexProcess.waitForFinished() || latexProcess.exitCode() != 0) {
-		WARN("pdflatex process failed, exit code = " << latexProcess.exitCode());
-		*success = false;
+		QString err = engine + " process failed, exit code = " + QString::number(latexProcess.exitCode());
+		WARN(err.toStdString());
+		res->successful = false;
+		res->errorMessage = err;
 		QFile::remove(baseName + ".aux");
 		QFile::remove(baseName + ".log");
 		return QByteArray();
@@ -169,13 +175,14 @@ QByteArray TeXRenderer::imageFromPDF(const QTemporaryFile& file, const int dpi, 
 
 	QByteArray ba = pdfFile.readAll();
  	QFile::remove(baseName + ".pdf");
-	*success = true;
+	res->successful = true;
+	res->errorMessage = "";
 
 	return ba;
 }
 
 // TEX -> DVI -> PS -> PNG
-QByteArray TeXRenderer::imageFromDVI(const QTemporaryFile& file, const int dpi, bool* success) {
+QByteArray TeXRenderer::imageFromDVI(const QTemporaryFile& file, const int dpi, Result* res) {
 	QFileInfo fi(file.fileName());
 	const QString& baseName = fi.completeBaseName();
 
@@ -183,8 +190,10 @@ QByteArray TeXRenderer::imageFromDVI(const QTemporaryFile& file, const int dpi, 
 	QProcess latexProcess;
 	latexProcess.start("latex", QStringList() << "-interaction=batchmode" << file.fileName());
 	if (!latexProcess.waitForFinished() || latexProcess.exitCode() != 0) {
-		WARN("latex process failed, exit code = " << latexProcess.exitCode());
-		*success = false;
+		QString err = "latex process failed, exit code = " + QString::number(latexProcess.exitCode());
+		WARN(err.toStdString());
+		res->successful = false;
+		res->errorMessage = err;
 		QFile::remove(baseName + ".aux");
 		QFile::remove(baseName + ".log");
 		return QByteArray();
@@ -194,8 +203,9 @@ QByteArray TeXRenderer::imageFromDVI(const QTemporaryFile& file, const int dpi, 
 	QProcess dvipsProcess;
 	dvipsProcess.start("dvips", QStringList() << "-E" << baseName);
 	if (!dvipsProcess.waitForFinished() || dvipsProcess.exitCode() != 0) {
-		WARN("dvips process failed, exit code = " << dvipsProcess.exitCode());
-		*success = false;
+		QString err = "dvips process failed, exit code = " + QString::number(dvipsProcess.exitCode());
+		WARN(err.toStdString());
+		res->successful = false;
 		QFile::remove(baseName + ".aux");
 		QFile::remove(baseName + ".log");
 		QFile::remove(baseName + ".dvi");
@@ -215,8 +225,10 @@ QByteArray TeXRenderer::imageFromDVI(const QTemporaryFile& file, const int dpi, 
 	convertProcess.start("convert", params);
 
 	if (!convertProcess.waitForFinished() || convertProcess.exitCode() != 0) {
-		WARN("convert process failed, exit code = " << convertProcess.exitCode());
-		*success = false;
+		QString err = "convert process failed, exit code = " + QString::number(convertProcess.exitCode());
+		WARN(err.toStdString());
+		res->successful = false;
+		res->errorMessage = err;
 		QFile::remove(baseName + ".aux");
 		QFile::remove(baseName + ".log");
 		QFile::remove(baseName + ".dvi");
@@ -239,7 +251,8 @@ QByteArray TeXRenderer::imageFromDVI(const QTemporaryFile& file, const int dpi, 
 
 	QByteArray ba = pdfFile.readAll();
  	QFile::remove(baseName + ".pdf");
-	*success = true;
+	res->successful = true;
+	res->errorMessage = "";
 
 	return ba;
 }

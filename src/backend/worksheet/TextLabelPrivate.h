@@ -14,6 +14,7 @@
 
 #include "src/backend/worksheet/plots/cartesian/CartesianCoordinateSystem.h"
 #include "src/backend/worksheet/WorksheetElementPrivate.h"
+#include "tools/TeXRenderer.h"
 #include <QStaticText>
 #include <QFutureWatcher>
 #include <QDesktopWidget>
@@ -45,7 +46,7 @@ public:
 	QImage teXImage;
 	QByteArray teXPdfData;
 	QFutureWatcher<QByteArray> teXImageFutureWatcher;
-	bool teXRenderSuccessful{false};
+	TeXRenderer::Result texRenderResult;
 
 	// see TextLabel::init() for type specific default settings
 

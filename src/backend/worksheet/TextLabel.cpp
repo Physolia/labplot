@@ -520,7 +520,7 @@ void TextLabelPrivate::updateText() {
 		format.fontSize = teXFont.pointSize();
 		format.fontFamily = teXFont.family();
 		format.dpi = teXImageResolution;
-		QFuture<QByteArray> future = QtConcurrent::run(TeXRenderer::renderImageLaTeX, textWrapper.text, &teXRenderSuccessful, format);
+		QFuture<QByteArray> future = QtConcurrent::run(TeXRenderer::renderImageLaTeX, textWrapper.text, &texRenderResult, format);
 		teXImageFutureWatcher.setFuture(future);
 
 		//don't need to call retransorm() here since it is done in updateTeXImage
@@ -585,8 +585,8 @@ void TextLabelPrivate::updateTeXImage() {
 	teXPdfData = teXImageFutureWatcher.result();
 	teXImage = GuiTools::imageFromPDFData(teXPdfData, zoomFactor);
 	updateBoundingRect();
-	DEBUG(Q_FUNC_INFO << ", TeX renderer successful = " << teXRenderSuccessful);
-	Q_EMIT q->teXImageUpdated(teXRenderSuccessful);
+	DEBUG(Q_FUNC_INFO << ", TeX renderer successful = " << texRenderResult.successful);
+	Q_EMIT q->teXImageUpdated(texRenderResult);
 }
 
 void TextLabelPrivate::updateBorder() {

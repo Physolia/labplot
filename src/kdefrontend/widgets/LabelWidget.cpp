@@ -1183,12 +1183,16 @@ void LabelWidget::labelTextWrapperChanged(const TextLabel::TextWrapper& text) {
  * \brief Highlights the text field if wrong latex syntax was used (null image was produced)
  * or something else went wrong during rendering (\sa ExpressionTextEdit::validateExpression())
  */
-void LabelWidget::labelTeXImageUpdated(bool valid) {
-	if (!valid) {
-		if (ui.teLabel->styleSheet().isEmpty())
+void LabelWidget::labelTeXImageUpdated(const TeXRenderer::Result &result) {
+	if (!result.successful) {
+		if (ui.teLabel->styleSheet().isEmpty()) {
 			SET_WARNING_STYLE(ui.teLabel)
-	} else
+			ui.teLabel->setToolTip(result.errorMessage);
+		}
+	} else {
 		ui.teLabel->setStyleSheet(QString());
+		ui.teLabel->setToolTip(QString());
+	}
 }
 
 void LabelWidget::labelTeXFontChanged(const QFont& font) {

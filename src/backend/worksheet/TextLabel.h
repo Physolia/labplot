@@ -149,7 +149,7 @@ Q_SIGNALS:
 	void borderPenChanged(QPen&);
 	void borderOpacityChanged(float);
 
-	void teXImageUpdated(bool);
+	void teXImageUpdated(const TeXRenderer::Result &res);
 };
 
 #endif

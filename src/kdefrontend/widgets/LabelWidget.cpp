@@ -33,6 +33,7 @@
 #include <KF5/KSyntaxHighlighting/Definition>
 #include <KF5/KSyntaxHighlighting/Theme>
 #endif
+#include <KMessageWidget>
 
 /*!
 	\class LabelWidget
@@ -164,6 +165,12 @@ LabelWidget::LabelWidget(QWidget* parent) : QWidget(parent), m_dateTimeMenu(new 
 	                          ? m_repository.defaultTheme(KSyntaxHighlighting::Repository::DarkTheme)
 	                          : m_repository.defaultTheme(KSyntaxHighlighting::Repository::LightTheme) );
 #endif
+
+	m_messageWidget = new KMessageWidget(this);
+	m_messageWidget->setMessageType(KMessageWidget::Error);
+	m_messageWidget->setWordWrap(true);
+	auto* gridLayout = qobject_cast<QGridLayout*>(layout());
+	gridLayout->addWidget(m_messageWidget, 1, 4);
 
 	//SLOTS
 	// text properties
@@ -615,8 +622,11 @@ void LabelWidget::modeChanged(int index) {
 
 	//when switching to non-LaTeX mode, set the background color to white just for the case the latex code provided by the user
 	//in the TeX-mode is not valid and the background was set to red (s.a. LabelWidget::labelTeXImageUpdated())
-	if (mode != TextLabel::Mode::LaTeX)
+	if (mode != TextLabel::Mode::LaTeX) {
 		ui.teLabel->setStyleSheet(QString());
+		ui.lError->setVisible(false);
+		m_messageWidget->setVisible(false);
+	}
 
 	if (m_initializing)
 		return;
@@ -1187,12 +1197,14 @@ void LabelWidget::labelTeXImageUpdated(const TeXRenderer::Result &result) {
 	if (!result.successful) {
 		if (ui.teLabel->styleSheet().isEmpty()) {
 			SET_WARNING_STYLE(ui.teLabel)
-			ui.teLabel->setToolTip(result.errorMessage);
+			m_messageWidget->setText(result.errorMessage);
+			m_messageWidget->setMaximumWidth(ui.teLabel->width());
 		}
 	} else {
 		ui.teLabel->setStyleSheet(QString());
-		ui.teLabel->setToolTip(QString());
 	}
+	m_messageWidget->setVisible(!result.successful);
+	ui.lError->setVisible(!result.successful);
 }
 
 void LabelWidget::labelTeXFontChanged(const QFont& font) {

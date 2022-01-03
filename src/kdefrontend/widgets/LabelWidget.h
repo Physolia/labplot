@@ -26,6 +26,7 @@ namespace KSyntaxHighlighting {
 class Label;
 class Axis;
 class QMenu;
+class KMessageWidget;
 
 class LabelWidget : public QWidget {
 	Q_OBJECT
@@ -60,6 +61,7 @@ private:
 	KSyntaxHighlighting::SyntaxHighlighter* m_highlighter;
 	KSyntaxHighlighting::Repository m_repository;
 #endif
+	KMessageWidget *m_messageWidget;
 
 	void initConnections() const;
 

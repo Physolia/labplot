@@ -154,7 +154,8 @@ QByteArray TeXRenderer::imageFromPDF(const QTemporaryFile& file, const int dpi, 
 #endif
 
 	if (!latexProcess.waitForFinished() || latexProcess.exitCode() != 0) {
-		QString err = engine + " process failed, exit code = " + QString::number(latexProcess.exitCode());
+		auto o = latexProcess.readAllStandardOutput();
+		QString err = engine + " process failed, exit code = " + QString::number(latexProcess.exitCode()) + "\n" + o;
 		WARN(err.toStdString());
 		res->successful = false;
 		res->errorMessage = err;

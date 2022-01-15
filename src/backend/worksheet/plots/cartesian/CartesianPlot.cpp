@@ -3534,6 +3534,11 @@ void CartesianPlotPrivate::retransform() {
 	WorksheetElementContainerPrivate::recalcShapeAndBoundingRect();
 }
 
+/*!
+ * \brief CartesianPlotPrivate::retransformXScale
+ * Sets new xScales to coordinate systems and updates the ranges of the axis
+ * \param index
+ */
 void CartesianPlotPrivate::retransformXScale(int index) {
 	DEBUG(Q_FUNC_INFO)
 	static const int breakGap = 20;

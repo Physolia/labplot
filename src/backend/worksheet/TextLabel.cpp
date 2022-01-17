@@ -276,13 +276,14 @@ void TextLabel::setText(const TextWrapper &textWrapper) {
 			// keep text formatting
 			QTextEdit te(d->textWrapper.text);
 			te.selectAll();
-			//TODO
 			if (d->textWrapper.mode != TextLabel::Mode::Text)	// restore text color when switch to text
 				te.setTextColor(d->fontColor);
 			te.setText(textWrapper.text);
 			if (d->textWrapper.mode != TextLabel::Mode::Text)	// restore text color when switch to text
 				te.setTextColor(d->fontColor);
-			exec(new TextLabelSetTextCmd(d, te.toHtml(), ki18n("%1: set label text")));
+			TextWrapper tw = textWrapper;
+			tw.text = te.toHtml();
+			exec(new TextLabelSetTextCmd(d, tw, ki18n("%1: set label text")));
 		} else
 			exec(new TextLabelSetTextCmd(d, textWrapper, ki18n("%1: set label text")));
 		// If previously the text was empty, the bounding rect is zero

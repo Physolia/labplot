@@ -1718,7 +1718,6 @@ void CartesianPlot::setTheme(const QString& theme) {
 
 void CartesianPlot::retransform() {
 	Q_D(CartesianPlot);
-	//dataChanged(-1, -1, nullptr);
 	d->retransform();
 	WorksheetElementContainer::retransform();
 }

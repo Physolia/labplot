@@ -213,5 +213,9 @@ bool XYEquationCurve::load(XmlStreamReader* reader, bool preview) {
 		}
 	}
 
+	// Recalculate, otherwise xColumn and yColumn are not updated
+	// and so autoscale is wrong
+	recalculate();
+
 	return true;
 }

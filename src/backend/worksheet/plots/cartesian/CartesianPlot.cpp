@@ -5004,7 +5004,8 @@ void CartesianPlot::save(QXmlStreamWriter* writer) const {
 }
 
 void CartesianPlot::finalizeLoad() {
-	retransform(); // important to retransform private otherwise datarect needed in retransformScales is incorrect
+	Q_D(CartesianPlot);
+	d->retransform(); // important to retransform private otherwise datarect needed in retransformScales is incorrect
 	retransformScales();
 	retransform(); // important to retransform all childs
 }

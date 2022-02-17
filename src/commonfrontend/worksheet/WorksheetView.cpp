@@ -1449,7 +1449,7 @@ void WorksheetView::addNew(QAction* action) {
 		} else
 			aspect->retransform();
 	} else if (aspect->type() == AspectType::CartesianPlot)
-		aspect->retransform();
+		static_cast<CartesianPlot*>(aspect)->finalizeLoad();
 
 	handleCartesianPlotActions();
 

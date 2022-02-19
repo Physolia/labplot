@@ -939,8 +939,9 @@ private:
 
 void CartesianPlot::setRect(const QRectF& rect) {
 	Q_D(CartesianPlot);
-	if (rect != d->rect)
+	if (rect != d->rect) {
 		exec(new CartesianPlotSetRectCmd(d, rect));
+	}
 }
 
 
@@ -3494,7 +3495,7 @@ CartesianPlotPrivate::CartesianPlotPrivate(CartesianPlot* plot) : AbstractPlotPr
 CartesianPlotPrivate::~CartesianPlotPrivate() = default;
 
 /*!
-	updates the position of plot rectangular in scene coordinates to \c r and recalculates the scales.
+	updates the position of plot rectangular in scene coordinates to \c.
 	The size of the plot corresponds to the size of the plot area, the area which is filled with the background color etc.
 	and which can pose the parent item for several sub-items (like TextLabel).
 	Note, the size of the area used to define the coordinate system doesn't need to be equal to this plot area.

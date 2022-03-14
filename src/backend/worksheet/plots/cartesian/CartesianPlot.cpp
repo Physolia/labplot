@@ -1720,8 +1720,8 @@ void CartesianPlot::setTheme(const QString& theme) {
 }
 
 void CartesianPlot::retransform() {
-	Q_D(CartesianPlot);
-	d->retransform();
+	// No need to retransform private, because
+	// this is only neccesary if the rect changes
 	WorksheetElementContainer::retransform();
 }
 

@@ -1082,11 +1082,10 @@ void CartesianPlotDock::autoScaleXRange(const int index, bool checked) {
 	}
 
 	for (auto* plot : m_plotList) {
-		bool retransform = 0;
+		bool retransform = true;
 		plot->enableAutoScaleX(index, checked, true);
 		DEBUG(Q_FUNC_INFO << " new auto scale = " << plot->xRange(index).autoScale())
 		if (checked) { // && index == plot->defaultCoordinateSystem()->yIndex()
-			retransform = plot->scaleAutoX(index, true);
 
 			for (int i = 0; i < plot->coordinateSystemCount(); i++) {
 				auto cSystem = plot->coordinateSystem(i);
@@ -1096,10 +1095,9 @@ void CartesianPlotDock::autoScaleXRange(const int index, bool checked) {
 				}
 			}
 		}
-		if (retransform) { // TODO: not necessary to retransform all coordinatesystems. Maybe storing in a vector all system indices and then retransform only them
-			plot->retransformScales();
+		if (retransform)
 			plot->retransform();
-		} else {
+		else {
 			// TODO:when no object used the range, handle it differently
 
 		}
@@ -1129,11 +1127,10 @@ void CartesianPlotDock::autoScaleYRange(const int index, const bool checked) {
 	}
 
 	for (auto* plot : m_plotList) {
-		bool retransform = 0;
+		bool retransform = true;
 		plot->enableAutoScaleY(index, checked, true);
 		DEBUG(Q_FUNC_INFO << " new auto scale = " << plot->yRange(index).autoScale())
 		if (checked) { // && index == plot->defaultCoordinateSystem()->yIndex()
-			retransform = plot->scaleAutoY(index, true);
 
 			for (int i = 0; i < plot->coordinateSystemCount(); i++) {
 				auto cSystem = plot->coordinateSystem(i);
@@ -1144,10 +1141,8 @@ void CartesianPlotDock::autoScaleYRange(const int index, const bool checked) {
 			}
 		}
 
-		if (retransform) {
-			plot->retransformScales();
+		if (retransform)
 			plot->retransform();
-		}
 	}
 	updateYRangeList();	// see range changes
 }

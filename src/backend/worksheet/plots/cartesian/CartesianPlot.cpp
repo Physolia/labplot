@@ -1566,6 +1566,7 @@ void CartesianPlot::setXRangeScale(const int index, const RangeT::Scale scale) {
 	}
 	exec(new CartesianPlotSetXScaleIndexCmd(d, scale, index));
 	d->retransformXScale(index);
+	retransform();
 	if (project())
 		project()->setChanged(true);
 }
@@ -1577,6 +1578,7 @@ void CartesianPlot::setYRangeScale(const int index, const RangeT::Scale scale) {
 	}
 	exec(new CartesianPlotSetYScaleIndexCmd(d, scale, index));
 	d->retransformYScale(index);
+	retransform();
 	if (project())
 		project()->setChanged(true);
 }

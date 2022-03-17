@@ -5,16 +5,7 @@ include:
   #- https://invent.kde.org/sysadmin/ci-utilities/raw/master/gitlab-templates/linux.yml
 #  - https://invent.kde.org/sysadmin/ci-utilities/raw/master/gitlab-templates/linux-qt6.yml
   #- https://invent.kde.org/sysadmin/ci-utilities/raw/master/gitlab-templates/freebsd.yml
-
-format:
-  stage: build
-  image: kdeorg/ci-suse-qt515:latest
-  needs: []
-  script:
-    - find . \( \( -name \*.cpp -o -name \*.h \) -a ! -iname \*soap\* \) -print0 | xargs -0 -n 1 clang-format-13 --Werror -n --verbose
-  only:
-    - merge_requests
-
+  
 # copied from Krita project
 clang_format:
   stage: build
@@ -25,8 +16,5 @@ clang_format:
     - update-ca-certificates
   script:
     - ./.gitlab-ci.script
-  rules:
-    - when: manual
-      allow_failure: false
 
 

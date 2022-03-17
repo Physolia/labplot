@@ -15,3 +15,18 @@ format:
   only:
     - merge_requests
 
+# copied from Krita project
+clang_format:
+  stage: build
+  image: debian:testing
+  before_script:
+    - apt-get update
+    - apt-get install --yes --no-install-recommends wget ca-certificates git clang-format-11
+    - update-ca-certificates
+  script:
+    - ./.gitlab-ci.script
+  rules:
+    - when: manual
+      allow_failure: false
+
+

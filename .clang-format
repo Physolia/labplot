@@ -25,6 +25,8 @@ Standard: Cpp11
 
 # 4 spaces indent
 TabWidth: 4
+IndentWidth: 4
+UseTab: Always
 
 # 2 * 80 wide lines
 ColumnLimit: 160
@@ -33,10 +35,20 @@ ColumnLimit: 160
 SortIncludes: true
 
 # break before braces on function, namespace and class definitions.
-BreakBeforeBraces: Linux
+BreakBeforeBraces: Custom
+BraceWrapping:
+    AfterClass: false
+    AfterCaseLabel: false
 
 # CrlInstruction *a;
-PointerAlignment: Right
+DerivePointerAlignment: false
+PointerAlignment: Left
+ReferenceAlignment: Left
+
+# only clang format 14
+# RemoveBracesLLVM: true
+
+#QualifierAlignment: Left
 
 # horizontally aligns arguments after an open bracket.
 AlignAfterOpenBracket: Align

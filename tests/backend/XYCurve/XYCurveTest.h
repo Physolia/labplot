@@ -21,44 +21,44 @@ private Q_SLOTS:
 	void addUniqueLineTest01();
 
 	// lineSkipGaps = false
-//	void updateLinesNoGapDirectConnection();
-//	void updateLinesNoGapStartHorizontal();
-//	void updateLinesNoGapStartVertical();
-//	void updateLinesNoGapMidPointHorizontal();
-//	void updateLinesNoGapMidPointVertical();
-//	void updateLinesNoGapSegments2();
-//	void updateLinesNoGapSegments3();
+	void updateLinesNoGapDirectConnection();
+	void updateLinesNoGapStartHorizontal();
+	void updateLinesNoGapStartVertical();
+	void updateLinesNoGapMidPointHorizontal();
+	void updateLinesNoGapMidPointVertical();
+	void updateLinesNoGapSegments2();
+	void updateLinesNoGapSegments3();
 
-//	// lineSkipGaps = false
-//	void updateLinesNoGapDirectConnectionLastVertical();
-//	void updateLinesNoGapStartHorizontalLastVertical();
-//	void updateLinesNoGapStartVerticalLastVertical();
-//	void updateLinesNoGapMidPointHorizontalLastVertical();
-//	void updateLinesNoGapMidPointVerticalLastVertical();
-//	void updateLinesNoGapSegments2LastVertical();
-//	void updateLinesNoGapSegments3LastVertical();
+	// lineSkipGaps = false
+	void updateLinesNoGapDirectConnectionLastVertical();
+	void updateLinesNoGapStartHorizontalLastVertical();
+	void updateLinesNoGapStartVerticalLastVertical();
+	void updateLinesNoGapMidPointHorizontalLastVertical();
+	void updateLinesNoGapMidPointVerticalLastVertical();
+	void updateLinesNoGapSegments2LastVertical();
+	void updateLinesNoGapSegments3LastVertical();
 
-//	// lineSkipGaps = true
-//	void updateLinesWithGapLineSkipDirectConnection();
-//	void updateLinesWithGapLineSkipDirectConnection2();
-//	void updateLinesWithGapLineSkipStartHorizontal();
-//	void updateLinesWithGapLineSkipStartVertical();
-//	void updateLinesWithGapLineSkipMidPointHorizontal();
-//	void updateLinesWithGapLineSkipMidPointVertical();
-//	void updateLinesWithGapLineSkipSegments2();
-//	void updateLinesWithGapLineSkipSegments3();
+	// lineSkipGaps = true
+	void updateLinesWithGapLineSkipDirectConnection();
+	void updateLinesWithGapLineSkipDirectConnection2();
+	void updateLinesWithGapLineSkipStartHorizontal();
+	void updateLinesWithGapLineSkipStartVertical();
+	void updateLinesWithGapLineSkipMidPointHorizontal();
+	void updateLinesWithGapLineSkipMidPointVertical();
+	void updateLinesWithGapLineSkipSegments2();
+	void updateLinesWithGapLineSkipSegments3();
 
-//	// lineSkipGaps = false
-//	void updateLinesWithGapDirectConnection();
-//	void updateLinesWithGapStartHorizontal();
-//	void updateLinesWithGapStartVertical();
-//	void updateLinesWithGapMidPointHorizontal();
-//	void updateLinesWithGapMidPointVertical();
-//	void updateLinesWithGapSegments2();
-//	void updateLinesWithGapSegments3();
+	// lineSkipGaps = false
+	void updateLinesWithGapDirectConnection();
+	void updateLinesWithGapStartHorizontal();
+	void updateLinesWithGapStartVertical();
+	void updateLinesWithGapMidPointHorizontal();
+	void updateLinesWithGapMidPointVertical();
+	void updateLinesWithGapSegments2();
+	void updateLinesWithGapSegments3();
 
-//	// Hover XYCurve
-//	void hooverCurveIntegerEndingZeros();
+	// Hover XYCurve
+	void hooverCurveIntegerEndingZeros();
 };
 
 #endif // XYCURVETEST_H

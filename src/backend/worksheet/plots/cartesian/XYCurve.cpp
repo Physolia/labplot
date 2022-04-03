@@ -1181,10 +1181,10 @@ void XYCurvePrivate::recalcLogicalPoints() {
  */
 void XYCurvePrivate::addLine(QPointF p, double& x, double& minY, double& maxY, QPointF& lastPoint, int& pixelDiff, int numberOfPixelX, double minDiffX, RangeT::Scale scale, bool& prevPixelDiffZero) {
 	if (scale == RangeT::Scale::Linear) {
-		pixelDiff = (qRound64(p.x() / minDiffX) - qRound64(x / minDiffX)) != 0; // only relevant if greater zero or not
+		pixelDiff = (qRound64(p.x() / minDiffX) - x) != 0; // only relevant if greater zero or not
 		addUniqueLine(p, minY, maxY, lastPoint, pixelDiff, m_lines, prevPixelDiffZero);
 		if (pixelDiff > 0) // set x to next pixel
-			x = p.x();
+			x = qRound64(p.x() / minDiffX);
 	} else {
 		// for nonlinear scaling the pixel distance must be calculated for every point
 		bool visible;
@@ -1360,7 +1360,7 @@ void XYCurvePrivate::updateLines() {
 				lineType != XYCurve::LineType::SplineAkimaNatural &&
 				lineType != XYCurve::LineType::SplineAkimaPeriodic) {
 				if (scale == RangeT::Scale::Linear) {
-					xPos = p0.x();
+					xPos = qRound64(p0.x() / minDiffX);
 					lastPoint = p0;
 					minY = p0.y();
 					maxY = p0.y();

@@ -1182,16 +1182,9 @@ void XYCurvePrivate::recalcLogicalPoints() {
 void XYCurvePrivate::addLine(QPointF p, double& x, double& minY, double& maxY, QPointF& lastPoint, int& pixelDiff, int numberOfPixelX, double minDiffX, RangeT::Scale scale, bool& prevPixelDiffZero) {
 	if (scale == RangeT::Scale::Linear) {
 		pixelDiff = llabs(qRound64(p.x() / minDiffX) - qRound64(x / minDiffX)) > 0; // only relevant if greater zero or not
-		if (isnan(x)) {
+		addUniqueLine(p, minY, maxY, lastPoint, pixelDiff, m_lines, prevPixelDiffZero);
+		if (pixelDiff > 0) // set x to next pixel
 			x = p.x();
-			lastPoint = p;
-			minY = p.y();
-			maxY = p.y();
-		} else {
-			addUniqueLine(p, minY, maxY, lastPoint, pixelDiff, m_lines, prevPixelDiffZero);
-			if (pixelDiff > 0) // set x to next pixel
-				x = p.x();
-		}
 	} else {
 		// for nonlinear scaling the pixel distance must be calculated for every point
 		bool visible;
@@ -1201,21 +1194,16 @@ void XYCurvePrivate::addLine(QPointF p, double& x, double& minY, double& maxY, Q
 		if (!visible)
 			return;
 
-		if (isnan(x)) {
+		// using only the difference between the points is not sufficient, because p0 is updated always
+		// independent if new line added or not
+		int xPixel = qRound((x - plot()->dataRect().x()) / (double)plot()->dataRect().width() * numberOfPixelX);
+		int p1Pixel = qRound((pScene.x() - plot()->dataRect().x()) / (double)plot()->dataRect().width() * numberOfPixelX);
+		pixelDiff = p1Pixel - xPixel;
+
+		addUniqueLine(p, minY, maxY, lastPoint, pixelDiff, m_lines, prevPixelDiffZero);
+
+		if (pixelDiff > 0) // set x to next pixel
 			x = pScene.x();
-			lastPoint = p;
-		} else {
-			// using only the difference between the points is not sufficient, because p0 is updated always
-			// independent if new line added or not
-			int xPixel = qRound((x - plot()->dataRect().x()) / (double)plot()->dataRect().width() * numberOfPixelX);
-			int p1Pixel = qRound((pScene.x() - plot()->dataRect().x()) / (double)plot()->dataRect().width() * numberOfPixelX);
-			pixelDiff = p1Pixel - xPixel;
-
-			addUniqueLine(p, minY, maxY, lastPoint, pixelDiff, m_lines, prevPixelDiffZero);
-
-			if (pixelDiff > 0) // set x to next pixel
-				x = pScene.x();
-		}
 	}
 }
 
@@ -1370,8 +1358,21 @@ void XYCurvePrivate::updateLines() {
 			if (lineType != XYCurve::LineType::SplineCubicNatural &&
 				lineType != XYCurve::LineType::SplineCubicPeriodic &&
 				lineType != XYCurve::LineType::SplineAkimaNatural &&
-				lineType != XYCurve::LineType::SplineAkimaPeriodic)
-				addLine(p0, xPos, minY, maxY, lastPoint, pixelDiff, numberOfPixelX, minDiffX, scale, prevPixelDiffZero);
+				lineType != XYCurve::LineType::SplineAkimaPeriodic) {
+				if (scale == RangeT::Scale::Linear) {
+					xPos = p0.x();
+					lastPoint = p0;
+					minY = p0.y();
+					maxY = p0.y();
+				} else {
+					bool visible;
+					QPointF pScene = q->cSystem->mapLogicalToScene(p0, visible, CartesianCoordinateSystem::MappingFlag::SuppressPageClipping);
+					if (!visible)
+						continue;
+					xPos = pScene.x();
+					lastPoint = p0;
+				}
+			}
 			break;
 		}
 

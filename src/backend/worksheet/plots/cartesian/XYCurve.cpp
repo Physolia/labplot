@@ -1187,6 +1187,7 @@ void XYCurvePrivate::addLine(QPointF p, double& x, double& minY, double& maxY, Q
 			x = qRound64(p.x() / minDiffX);
 	} else {
 		// for nonlinear scaling the pixel distance must be calculated for every point
+		static const double preCalc = (double)plot()->dataRect().width() * numberOfPixelX;
 		bool visible;
 		QPointF pScene = q->cSystem->mapLogicalToScene(p, visible, CartesianCoordinateSystem::MappingFlag::SuppressPageClipping);
 
@@ -1196,14 +1197,13 @@ void XYCurvePrivate::addLine(QPointF p, double& x, double& minY, double& maxY, Q
 
 		// using only the difference between the points is not sufficient, because p0 is updated always
 		// independent if new line added or not
-		int xPixel = qRound((x - plot()->dataRect().x()) / (double)plot()->dataRect().width() * numberOfPixelX);
-		int p1Pixel = qRound((pScene.x() - plot()->dataRect().x()) / (double)plot()->dataRect().width() * numberOfPixelX);
-		pixelDiff = p1Pixel - xPixel;
+		const int p1Pixel = qRound((pScene.x() - plot()->dataRect().x()) / preCalc);
+		pixelDiff = p1Pixel - x;
 
 		addUniqueLine(p, minY, maxY, lastPoint, pixelDiff, m_lines, prevPixelDiffZero);
 
 		if (pixelDiff > 0) // set x to next pixel
-			x = pScene.x();
+			x = qRound((pScene.x() - plot()->dataRect().x()) / preCalc);
 	}
 }
 
@@ -1369,7 +1369,7 @@ void XYCurvePrivate::updateLines() {
 					QPointF pScene = q->cSystem->mapLogicalToScene(p0, visible, CartesianCoordinateSystem::MappingFlag::SuppressPageClipping);
 					if (!visible)
 						continue;
-					xPos = pScene.x();
+					xPos = qRound((pScene.x() - plot()->dataRect().x())/((double)plot()->dataRect().width() * numberOfPixelX));
 					lastPoint = p0;
 				}
 			}
